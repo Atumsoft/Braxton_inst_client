@@ -43,10 +43,15 @@ fn run() {
     vbox.append(hbox_letsgo.clone().into(), false);
 
     let export_btn = Button::new("Export Excel");
+    export_btn.on_clicked(Box::new(export_button));
     hbox_letsgo.append(export_btn.into(), false);
 
     mainwin.show();
     ui::main();
+}
+
+fn export_button(button: &Button) {
+    println!("clicked");
 }
 
 pub fn main() {
