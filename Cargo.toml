@@ -4,4 +4,4 @@ version = "0.1.0"
 authors = ["eyecreate"]
 
 [dependencies]
-qmlrs = "0.1.1"
+ui = { git = "https://github.com/pcwalton/libui-rs.git" }
