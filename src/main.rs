@@ -28,10 +28,12 @@ fn run() {
     hbox_dates.set_padded(true);
     vbox.append(hbox_dates.clone().into(), false);
 
-    hbox_dates.append(Label::new("Select Start and End Dates:").into(), false);
+    hbox_dates.append(Label::new("Select dates to export:").into(), false);
 
     let start_date = DateTimePicker::new_date_picker();
     hbox_dates.append(start_date.into(), false);
+
+    hbox_dates.append(Label::new(" to ").into(), false);
 
     let end_date = DateTimePicker::new_date_picker();
     hbox_dates.append(end_date.into(), false);
