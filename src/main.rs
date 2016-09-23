@@ -1,6 +1,6 @@
 extern crate ui;
 
-use ui::{BoxControl, Button, DateTimePicker, Combobox, InitOptions, Label, Window};
+use ui::{BoxControl, Button, Entry, Combobox, InitOptions, Label, Window};
 
 fn run() {
     let mainwin = Window::new("Atumate Brewing Instruments", 440, 100, false);
@@ -28,14 +28,14 @@ fn run() {
     hbox_dates.set_padded(true);
     vbox.append(hbox_dates.clone().into(), false);
 
-    hbox_dates.append(Label::new("Select dates to export:").into(), false);
+    hbox_dates.append(Label::new("Dates to export:").into(), false);
 
-    let start_date = DateTimePicker::new_date_picker();
+    let start_date = Entry::new();
     hbox_dates.append(start_date.into(), false);
 
     hbox_dates.append(Label::new(" to ").into(), false);
 
-    let end_date = DateTimePicker::new_date_picker();
+    let end_date = Entry::new();
     hbox_dates.append(end_date.into(), false);
 
     let hbox_letsgo = BoxControl::new_horizontal();
