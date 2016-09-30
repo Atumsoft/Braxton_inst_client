@@ -4,4 +4,5 @@ version = "0.1.0"
 authors = ["eyecreate"]
 
 [dependencies]
-ui = { git = "https://github.com/pcwalton/libui-rs.git" }
+simple_csv = "0.0.15"
+getopts = "0.2.14"

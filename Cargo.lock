@@ -2,46 +2,20 @@
 name = "atumate-instrument-brew-gui"
 version = "0.1.0"
 dependencies = [
- "ui 0.1.0 (git+https://github.com/pcwalton/libui-rs.git)",
+ "getopts 0.2.14 (registry+https://github.com/rust-lang/crates.io-index)",
+ "simple_csv 0.0.15 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
-name = "bitflags"
-version = "0.7.0"
+name = "getopts"
+version = "0.2.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
-name = "libc"
-version = "0.2.16"
+name = "simple_csv"
+version = "0.0.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-
-[[package]]
-name = "make-cmd"
-version = "0.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-
-[[package]]
-name = "ui"
-version = "0.1.0"
-source = "git+https://github.com/pcwalton/libui-rs.git#13299d28f69f8009be8e08e453a9b0024f153a60"
-dependencies = [
- "bitflags 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "libc 0.2.16 (registry+https://github.com/rust-lang/crates.io-index)",
- "ui-sys 0.1.0 (git+https://github.com/pcwalton/libui-rs.git)",
-]
-
-[[package]]
-name = "ui-sys"
-version = "0.1.0"
-source = "git+https://github.com/pcwalton/libui-rs.git#13299d28f69f8009be8e08e453a9b0024f153a60"
-dependencies = [
- "libc 0.2.16 (registry+https://github.com/rust-lang/crates.io-index)",
- "make-cmd 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
-]
 
 [metadata]
-"checksum bitflags 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)" = "aad18937a628ec6abcd26d1489012cc0e18c21798210f491af69ded9b881106d"
-"checksum libc 0.2.16 (registry+https://github.com/rust-lang/crates.io-index)" = "408014cace30ee0f767b1c4517980646a573ec61a57957aeeabcac8ac0a02e8d"
-"checksum make-cmd 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "a8ca8afbe8af1785e09636acb5a41e08a765f5f0340568716c18a8700ba3c0d3"
-"checksum ui 0.1.0 (git+https://github.com/pcwalton/libui-rs.git)" = "<none>"
-"checksum ui-sys 0.1.0 (git+https://github.com/pcwalton/libui-rs.git)" = "<none>"
+"checksum getopts 0.2.14 (registry+https://github.com/rust-lang/crates.io-index)" = "d9047cfbd08a437050b363d35ef160452c5fe8ea5187ae0a624708c91581d685"
+"checksum simple_csv 0.0.15 (registry+https://github.com/rust-lang/crates.io-index)" = "44678cff420c3d6034a58f9c98339544e9117c6aae49618fe7d14424df77c2d7"

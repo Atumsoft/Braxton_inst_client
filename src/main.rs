@@ -1,61 +1,31 @@
-extern crate ui;
+extern crate simple_csv;
+extern crate getopts;
+use getopts::Options;
+use std::env;
 
-use ui::{BoxControl, Button, Entry, Combobox, InitOptions, Label, Window};
-
-fn run() {
-    let mainwin = Window::new("Atumate Brewing Instruments", 440, 100, false);
-    mainwin.set_margined(true);
-    mainwin.on_closing(Box::new(|_| {
-        ui::quit();
-        false
-    }));
-
-    let vbox = BoxControl::new_vertical();
-    vbox.set_padded(true);
-    mainwin.set_child(vbox.clone().into());
-
-    let hbox_instruments = BoxControl::new_horizontal();
-    hbox_instruments.set_padded(true);
-    vbox.append(hbox_instruments.clone().into(), false);
-
-    hbox_instruments.append(Label::new("Instrument:").into(), false);
-
-    let instrument_select = Combobox::new();
-    instrument_select.append("Instrument 1");
-    hbox_instruments.append(instrument_select.into(), false);
-
-    let hbox_dates = BoxControl::new_horizontal();
-    hbox_dates.set_padded(true);
-    vbox.append(hbox_dates.clone().into(), false);
-
-    hbox_dates.append(Label::new("Dates to export:").into(), false);
-
-    let start_date = Entry::new();
-    hbox_dates.append(start_date.into(), false);
-
-    hbox_dates.append(Label::new(" to ").into(), false);
-
-    let end_date = Entry::new();
-    hbox_dates.append(end_date.into(), false);
-
-    let hbox_letsgo = BoxControl::new_horizontal();
-    hbox_letsgo.set_padded(true);
-    vbox.append(hbox_letsgo.clone().into(), false);
-
-    let export_btn = Button::new("Export Excel");
-    export_btn.on_clicked(Box::new(export_button));
-    hbox_letsgo.append(export_btn.into(), false);
-
-    mainwin.show();
-    ui::main();
-}
-
-fn export_button(button: &Button) {
-    println!("clicked");
+fn print_args_usage(program_name: &str, options: Options) {
+    let brief = format!("Usage: {} [options]", program_name);
+    print!("{}", options.usage(&brief));
 }
 
 pub fn main() {
-    ui::init(InitOptions).unwrap();
-    run();
-    ui::uninit();
+    let raw_args: Vec<String> = env::args().collect();
+    let program_name = raw_args[0].clone();
+
+    let mut accepted_program_options = Options::new();
+    accepted_program_options.optflag("h","help","Find out all the cool things this program can do!");
+    accepted_program_options.optflag("f", "find-instruments", "Search and list all discovered instruments.");
+    accepted_program_options.optopt("c","connect", "Connect to instrument at address", "ADDRESS");
+    accepted_program_options.optopt("o","output-file", "File to output filtered CSV to", "FILE");
+    accepted_program_options.optopt("s","start-filter", "Beginning date to filter CSV data on", "MM/DD/YYYY");
+    accepted_program_options.optopt("e","end-filter", "Ending date to filter CSV data on", "MM/DD/YYYY");
+    let found_options = match accepted_program_options.parse(&raw_args[1..]) {
+        Ok(matches) => {matches}
+        Err(failure) => {panic!(failure.to_string())}
+    };
+
+    if found_options.opt_present("h") {
+        print_args_usage(&program_name, accepted_program_options);
+        return;
+    }
 }
