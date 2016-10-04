@@ -2,6 +2,8 @@ extern crate simple_csv;
 extern crate getopts;
 use getopts::Options;
 use std::env;
+use std::path;
+use std::fs;
 
 fn print_args_usage(program_name: &str, options: Options) {
     let brief = format!("Usage: {} [options]", program_name);
@@ -26,6 +28,30 @@ pub fn main() {
 
     if found_options.opt_present("h") {
         print_args_usage(&program_name, accepted_program_options);
+        return;
+    }
+
+    if found_options.opt_present("f") {
+        //TODO:implement querying for instruments
+        return;
+    }
+
+    if found_options.opt_present("c") {
+        //TODO:implement connecting to instrument for CSV data.
+        let start_date = found_options.opt_str("s");
+        let end_date = found_options.opt_str("e");
+        let output_file_path = found_options.opt_str("o");
+
+        //Check if file exists. Don't overwrite existing file and instead exit.
+        if path::Path::new(output_file).exists() {
+            println!("File already exists. Please specify another file.");
+            std::process::exit(1);
+        }
+
+        //Create file and open for writing.
+        let output_file = try!(fs::File::create(output_file_path));
+        //TODO: write to file
+
         return;
     }
 }
