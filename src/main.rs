@@ -42,7 +42,6 @@ pub fn main() {
     }
 
     if found_options.opt_present("c") {
-        //TODO:implement connecting to instrument for CSV data.
         let start_date = found_options.opt_str("s").unwrap();
         let end_date = found_options.opt_str("e").unwrap();
         let output_file_path = found_options.opt_str("o").unwrap();
@@ -55,6 +54,9 @@ pub fn main() {
 
         //Create file and open for writing.
         let output_file = open_file(output_file_path);
+
+        //TODO: send date filters to instrument
+        //TODO: read file data back from sockets
         //TODO: write to file
 
         return;
