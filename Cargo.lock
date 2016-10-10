@@ -3,7 +3,6 @@ name = "atumate-instrument-brew-gui"
 version = "0.1.0"
 dependencies = [
  "getopts 0.2.14 (registry+https://github.com/rust-lang/crates.io-index)",
- "simple_csv 0.0.15 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -11,11 +10,5 @@ name = "getopts"
 version = "0.2.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
-[[package]]
-name = "simple_csv"
-version = "0.0.15"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-
 [metadata]
 "checksum getopts 0.2.14 (registry+https://github.com/rust-lang/crates.io-index)" = "d9047cfbd08a437050b363d35ef160452c5fe8ea5187ae0a624708c91581d685"
-"checksum simple_csv 0.0.15 (registry+https://github.com/rust-lang/crates.io-index)" = "44678cff420c3d6034a58f9c98339544e9117c6aae49618fe7d14424df77c2d7"

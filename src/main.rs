@@ -1,15 +1,20 @@
-extern crate simple_csv;
 extern crate getopts;
 use getopts::Options;
 use std::env;
 use std::path;
 use std::fs;
+use std::io;
 
 fn print_args_usage(program_name: &str, options: Options) {
     let brief = format!("Usage: {} [options]", program_name);
     print!("{}", options.usage(&brief));
 }
 
+fn open_file(file_path: String) -> Result<fs::File, io::Error> {
+    Ok(try!(fs::File::create(&file_path)))
+}
+
+#[allow(unused_variables)]
 pub fn main() {
     let raw_args: Vec<String> = env::args().collect();
     let program_name = raw_args[0].clone();
@@ -38,18 +43,18 @@ pub fn main() {
 
     if found_options.opt_present("c") {
         //TODO:implement connecting to instrument for CSV data.
-        let start_date = found_options.opt_str("s");
-        let end_date = found_options.opt_str("e");
-        let output_file_path = found_options.opt_str("o");
+        let start_date = found_options.opt_str("s").unwrap();
+        let end_date = found_options.opt_str("e").unwrap();
+        let output_file_path = found_options.opt_str("o").unwrap();
 
         //Check if file exists. Don't overwrite existing file and instead exit.
-        if path::Path::new(output_file).exists() {
+        if path::Path::new(&output_file_path).exists() {
             println!("File already exists. Please specify another file.");
             std::process::exit(1);
         }
 
         //Create file and open for writing.
-        let output_file = try!(fs::File::create(output_file_path));
+        let output_file = open_file(output_file_path);
         //TODO: write to file
 
         return;
