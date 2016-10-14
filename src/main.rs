@@ -39,6 +39,7 @@ pub fn main() {
 
     if found_options.opt_present("f") {
         //TODO:implement querying for instruments
+        udp_server::find_instruments();
         return;
     }
 

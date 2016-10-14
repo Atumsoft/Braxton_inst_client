@@ -2,6 +2,7 @@ use std::net::UdpSocket;
 use std::net::IpAddr;
 use std::io::Error;
 use std::string::String;
+use std::time;
 
 
 fn int_to_char(byte_array: &[u8; 255]) -> String{
@@ -73,11 +74,23 @@ pub fn find_instruments() -> Result<(), Error> {
     try!(socket.send_to(b"PING", "255.255.255.255:13389"));
 
     let mut buf = [0; 255];
-    let (amt, src) = try!(socket.recv_from(&mut buf));
-    //println!("{:?}", buf);
-    match src.ip() {
-        IpAddr::V4(ip) => println!("Response From: {:?}",ip.octets()),
-        IpAddr::V6(ip) => println!("lol, you use ipv6"),
+    socket.set_read_timeout(Some(time::Duration::from_secs(5)));
+    loop {
+        let socket_result = socket.recv_from(&mut buf);
+        match socket_result {
+            Ok((amt,src)) => {
+                match src.ip() {
+                    IpAddr::V4(ip) => {
+                        let ip_str = format!("{}.{}.{}.{}",ip.octets()[0],ip.octets()[1],ip.octets()[2],ip.octets()[3]);
+                        //TODO: better find how to print/store the addresses.
+                        println!("Response From: {:?}",ip_str)
+                    },
+                    IpAddr::V6(ip) => println!("lol, you use ipv6"),
+                }
+            },
+            Err(_) => break,
+        };
+
     }
 
     Ok(())
