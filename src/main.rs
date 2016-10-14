@@ -31,19 +31,18 @@ pub fn main() {
         Ok(matches) => {matches}
         Err(failure) => {panic!(failure.to_string())}
     };
-
     if found_options.opt_present("h") {
         print_args_usage(&program_name, accepted_program_options);
         return;
     }
 
-    if found_options.opt_present("f") {
+    else if found_options.opt_present("f") {
         //TODO:implement querying for instruments
         udp_server::find_instruments();
         return;
     }
 
-    if found_options.opt_present("c") {
+    else if found_options.opt_present("c") {
         let start_date = found_options.opt_str("s").unwrap();
         let end_date = found_options.opt_str("e").unwrap();
         let output_file_path = found_options.opt_str("o").unwrap();
@@ -61,6 +60,11 @@ pub fn main() {
         //TODO: read file data back from sockets
         //TODO: write to file
 
+        return;
+    }
+
+    else {
+        print_args_usage(&program_name, accepted_program_options);
         return;
     }
 }
