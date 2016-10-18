@@ -17,44 +17,14 @@ fn int_to_char(byte_array: &[u8; 255]) -> String{
     String::from_utf8(new_vec).unwrap()
 }
 
-pub fn socket_response(listen_addr: &str, listen_port: i32) -> Result<(), Error> {
-
-    let bind_addr = format!("{}:{}", listen_addr, listen_port);
-    let socket = try!(UdpSocket::bind(&bind_addr.as_str()));
-    println!("{:?}", socket);
-
-    loop {
-        // read from the socket
-        let mut buf = [0; 255];
-        let (amt, src) = try!(socket.recv_from(&mut buf));
-
-        let message = int_to_char(&buf);
-        println!("{:?}", &message);
-        println!("{:?}", src);
-
-        // send a reply to the socket we received data from
-        let buf = &mut buf[..amt];
-        buf.reverse();
-        try!(socket.send_to(buf, &src));
-
-        // quit if instructed to do so
-        // "&" in front of message converts String type to &str type
-        if &message == "QUIT"{
-            break;
-        }
-    }
-    Ok(())
-}   // the socket is closed here
-
-
-
 #[allow(unused_variables)]
-pub fn socket_send(data_to_send:&[u8]) -> Result<(), Error> {
+pub fn request_csv(send_to:&str,data_to_send:&[u8]) -> Result<(), Error> {
 
     let socket = try!(UdpSocket::bind("0.0.0.0:0"));
     try!(socket.set_broadcast(true));
 
-    try!(socket.send_to(&data_to_send, "255.255.255.255:13389"));
+    let socket_address:&str = &format!("{}:{}",send_to,"13389");
+    try!(socket.send_to(&data_to_send, socket_address));
 
     let mut buf = [0; 255];
     let (amt, src) = try!(socket.recv_from(&mut buf));

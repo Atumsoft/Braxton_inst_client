@@ -45,6 +45,7 @@ pub fn main() {
         let start_date = found_options.opt_str("s").unwrap();
         let end_date = found_options.opt_str("e").unwrap();
         let output_file_path = found_options.opt_str("o").unwrap();
+        let ip_addr = found_options.opt_str("c").unwrap();
 
         //Check if file exists. Don't overwrite existing file and instead exit.
         if path::Path::new(&output_file_path).exists() {
