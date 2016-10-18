@@ -56,6 +56,8 @@ pub fn main() {
         //Create file and open for writing.
         let output_file = open_file(output_file_path);
 
+        let date_range = format!("{}-{}", start_date, end_date);
+        udp_server::request_csv(ip_addr, date_range);
         //TODO: send date filters to instrument
         //TODO: read file data back from sockets
         //TODO: write to file

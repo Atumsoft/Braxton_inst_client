@@ -18,18 +18,29 @@ fn int_to_char(byte_array: &[u8; 255]) -> String{
 }
 
 #[allow(unused_variables)]
-pub fn request_csv(send_to:&str,data_to_send:&[u8]) -> Result<(), Error> {
+pub fn request_csv(send_to: String, date_range: String) -> Result<(), Error> {
 
     let socket = try!(UdpSocket::bind("0.0.0.0:0"));
     try!(socket.set_broadcast(true));
 
     let socket_address:&str = &format!("{}:{}",send_to,"13389");
-    try!(socket.send_to(&data_to_send, socket_address));
+    try!(socket.send_to(b"SEND", socket_address));
+    try!(socket.send_to(&date_range.as_bytes(), socket_address));
 
-    let mut buf = [0; 255];
-    let (amt, src) = try!(socket.recv_from(&mut buf));
-    //println!("{:?}", buf);
-    println!("Response From: {:?}", src);
+    loop {
+        let mut buf = [0; 255];
+        let (amt, src) = try!(socket.recv_from(&mut buf));
+
+        let message = int_to_char(&buf);
+        if &message == "STOP" {
+            break;
+        }
+        else{
+            println!("{}", message);
+        }
+    }
+
+    println!("Response");
 
     Ok(())
 }   // the socket is closed here

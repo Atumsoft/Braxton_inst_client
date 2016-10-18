@@ -1,6 +1,5 @@
 import wx
 import subprocess
-import os
 
 import datetime
 
@@ -8,7 +7,7 @@ import datetime
 from mainView import MainFrame
 import images
 
-RUST_APP_PATH = os.path.normpath("atumate-instrument-brew-gui")
+RUST_APP_PATH = "./atumate-instrument-brew-gui"
 SCAN_ARGS = "-f"
 CONNECT_ARGS = "-c %s -o %s -s %s -e %s"  # -c: ip address of instrument -o: output file -s: starting date -e: ending date
 
@@ -47,15 +46,18 @@ class Controller:
         # TODO: get instruments from UDP scan script
 
         command = "%s %s" % (RUST_APP_PATH, SCAN_ARGS)
-        process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
         detectedInstruments, stderr = process.communicate()
-        # detectedInstruments = ["test", "test1"]
-        print detectedInstruments
 
-        # self.mainWindow.cmbInstruments.Clear()
-        # self.mainWindow.cmbInstruments.SetValue("Select an Instrument")
-        # for inst in detectedInstruments:
-        #     self.mainWindow.cmbInstruments.Append(inst)
+        self.instDict = {}
+        for instInfo in detectedInstruments.split(":"):
+            inst, ip = instInfo.split("=>")
+            self.instDict[inst] = ip
+
+        self.mainWindow.cmbInstruments.Clear()
+        self.mainWindow.cmbInstruments.SetValue("Select an Instrument")
+        for inst in self.instDict.keys():
+            self.mainWindow.cmbInstruments.Append(inst)
 
     def onExport(self, event):
         startDate = self._wxdate2pydate(self.mainWindow.dpStartDate.GetValue())
@@ -64,12 +66,19 @@ class Controller:
         endDate = self._wxdate2pydate(self.mainWindow.dpEndDate.GetValue())
         endDate = datetime.datetime.strftime(endDate, "%m/%d/%Y")
 
+        selectedInstIp = self.instDict.get(self.mainWindow.cmbInstruments.GetValue())
+
+        command = "%s %s" % (RUST_APP_PATH, CONNECT_ARGS % (selectedInstIp.strip(), "out.xls", startDate, endDate))
+        process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+        excelDoc, stderr = process.communicate()
+        print excelDoc, stderr
+
         selectedInst = self.mainWindow.cmbInstruments.GetValue()
         if not selectedInst:
             msgBox = wx.MessageDialog(self.mainWindow, "Please make an instrument selection", "Selection Error", wx.ICON_ERROR)
             msgBox.ShowModal()
 
-        # TODO: call script with dates and instrument as params\
+        # TODO: call script with dates and instrument as params
 
     def _wxdate2pydate(self, date):
         assert isinstance(date, wx.DateTime)
