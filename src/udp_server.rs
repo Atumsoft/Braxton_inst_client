@@ -74,6 +74,7 @@ pub fn find_instruments() -> Result<(), Error> {
     try!(socket.send_to(b"PING", "255.255.255.255:13389"));
 
     let mut buf = [0; 255];
+    let mut device_list = Vec::new();
     socket.set_read_timeout(Some(time::Duration::from_secs(5)));
     loop {
         let socket_result = socket.recv_from(&mut buf);
@@ -82,16 +83,21 @@ pub fn find_instruments() -> Result<(), Error> {
                 match src.ip() {
                     IpAddr::V4(ip) => {
                         let ip_str = format!("{}.{}.{}.{}",ip.octets()[0],ip.octets()[1],ip.octets()[2],ip.octets()[3]);
-                        //TODO: better find how to print/store the addresses.
-                        println!("Response From: {:?}",ip_str)
+                        let name_str = int_to_char(&buf);
+                        device_list.push(format!("{}=>{}",name_str,ip_str));
                     },
-                    IpAddr::V6(ip) => println!("lol, you use ipv6"),
+                    IpAddr::V6(ip) => {
+                        let ip_str = format!("{}:{}:{}:{}:{}:{}:{}:{}",ip.segments()[0],ip.segments()[1],ip.segments()[2],ip.segments()[3],ip.segments()[4],ip.segments()[5],ip.segments()[6],ip.segments()[7]);
+                        let name_str = int_to_char(&buf);
+                        device_list.push(format!("{}=>{}",name_str,ip_str));
+                    },
                 }
             },
             Err(_) => break,
         };
 
     }
-
+    //Print out any found instruments
+    println!("{}",device_list.as_slice().join(","));
     Ok(())
-}   // the socket is closed here
+}
