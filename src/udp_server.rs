@@ -18,7 +18,7 @@ fn int_to_char(byte_array: &[u8; 255]) -> String{
 }
 
 #[allow(unused_variables)]
-pub fn request_csv(send_to: String, date_range: String) -> Result<(), Error> {
+pub fn request_csv(send_to: String, date_range: String) -> Result<Vec<String>, Error> {
 
     let socket = try!(UdpSocket::bind("0.0.0.0:0"));
     try!(socket.set_broadcast(true));
@@ -26,6 +26,8 @@ pub fn request_csv(send_to: String, date_range: String) -> Result<(), Error> {
     let socket_address:&str = &format!("{}:{}",send_to,"13389");
     try!(socket.send_to(b"SEND", socket_address));
     try!(socket.send_to(&date_range.as_bytes(), socket_address));
+
+    let mut data: Vec<String> = Vec::new();
 
     loop {
         let mut buf = [0; 255];
@@ -36,13 +38,13 @@ pub fn request_csv(send_to: String, date_range: String) -> Result<(), Error> {
             break;
         }
         else{
-            println!("{}", message);
+            data.push(message)
         }
     }
 
     println!("Response");
 
-    Ok(())
+    Ok(data)
 }   // the socket is closed here
 
 

@@ -1,8 +1,8 @@
 import wx
 import subprocess
-
+import os
 import datetime
-
+import csv
 
 from mainView import MainFrame
 import images
@@ -60,6 +60,15 @@ class Controller:
             self.mainWindow.cmbInstruments.Append(inst)
 
     def onExport(self, event):
+        filePicker = wx.FileDialog(self.mainWindow,
+                                   "Select Save Location",
+                                   os.getcwd(),
+                                   "output.csv",
+                                   "CSV files (*.csv)|*.csv|All files (*.*)|*.*",
+                                   wx.FD_SAVE)
+        if filePicker.ShowModal() == wx.ID_CANCEL: return
+        outFile = filePicker.GetPath()
+
         startDate = self._wxdate2pydate(self.mainWindow.dpStartDate.GetValue())
         startDate = datetime.datetime.strftime(startDate, "%m/%d/%Y")
 
@@ -68,15 +77,41 @@ class Controller:
 
         selectedInstIp = self.instDict.get(self.mainWindow.cmbInstruments.GetValue())
 
-        command = "%s %s" % (RUST_APP_PATH, CONNECT_ARGS % (selectedInstIp.strip(), "out.xls", startDate, endDate))
+        if not selectedInstIp:
+            msgBox = wx.MessageDialog(self.mainWindow, "Please select an instrument to pull data from", "Selection Error", wx.ICON_ERROR)
+            msgBox.ShowModal()
+            return
+
+        command = "%s %s" % (RUST_APP_PATH, CONNECT_ARGS % (selectedInstIp.strip(), outFile, startDate, endDate))
         process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-        excelDoc, stderr = process.communicate()
-        print excelDoc, stderr
+        data, stderr = process.communicate()
+        if "file already exists" in data.lower():
+            msgBox = wx.MessageDialog(self.mainWindow, data, "File Error", wx.ICON_ERROR)
+            msgBox.ShowModal()
+            return
+
+        dataList = []
+        for row in data.split("\n"):
+            if row == "Response": continue
+            if not row: continue
+            print row
+            dataList.append(eval(row))
+
+        # write to csv file
+        with open(outFile, "wb+") as csvFile:
+            csvWriter = csv.writer(csvFile, delimiter=",")
+
+            headers = ["date", "time"] + dataList[0]["info"].keys()
+            csvWriter.writerow(headers)
+            for row in dataList:
+                csvWriter.writerow([row["date"], row["time"]] + row["info"].values())
 
         selectedInst = self.mainWindow.cmbInstruments.GetValue()
         if not selectedInst:
             msgBox = wx.MessageDialog(self.mainWindow, "Please make an instrument selection", "Selection Error", wx.ICON_ERROR)
             msgBox.ShowModal()
+
+        subprocess.Popen(outFile, shell=True)
 
         # TODO: call script with dates and instrument as params
 

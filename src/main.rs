@@ -48,16 +48,20 @@ pub fn main() {
         let ip_addr = found_options.opt_str("c").unwrap();
 
         //Check if file exists. Don't overwrite existing file and instead exit.
-        if path::Path::new(&output_file_path).exists() {
-            println!("File already exists. Please specify another file.");
-            std::process::exit(1);
-        }
+//        if path::Path::new(&output_file_path).exists() {
+//            println!("File already exists. Please specify another file.");
+//            std::process::exit(1);
+//        }
 
         //Create file and open for writing.
-        let output_file = open_file(output_file_path);
+//        let output_file = open_file(output_file_path);
 
         let date_range = format!("{}-{}", start_date, end_date);
-        udp_server::request_csv(ip_addr, date_range);
+        let data = udp_server::request_csv(ip_addr, date_range).unwrap();
+
+        for row in &data{
+            println!("{}\n", row);
+        }
         //TODO: send date filters to instrument
         //TODO: read file data back from sockets
         //TODO: write to file
@@ -69,4 +73,12 @@ pub fn main() {
         print_args_usage(&program_name, accepted_program_options);
         return;
     }
+}
+
+// struct that holds info for the columns in the parsed file
+#[derive(Debug, Clone, RustcEncodable)]
+struct CsvRows {
+    pub date: String,
+    pub time: String,
+    pub info: HashMap<String, String>
 }
