@@ -17,6 +17,10 @@ fn int_to_char(byte_array: &[u8; 255]) -> String{
     String::from_utf8(new_vec).unwrap()
 }
 
+fn byte_array_to_u32(byte_array: &[u8; 255]) -> u32 {
+    //TODO
+}
+
 #[allow(unused_variables)]
 pub fn request_csv(send_to: String, date_range: String) -> Result<Vec<String>, Error> {
 
@@ -28,6 +32,11 @@ pub fn request_csv(send_to: String, date_range: String) -> Result<Vec<String>, E
     try!(socket.send_to(&date_range.as_bytes(), socket_address));
 
     let mut data: Vec<String> = Vec::new();
+
+    let mut first_buf = [0; 255];
+    let mut file_size: u32;
+    try!(socket.recv_from(&mut first_buf));
+    file_size = byte_array_to_u32(&first_buf);
 
     loop {
         let mut buf = [0; 255];

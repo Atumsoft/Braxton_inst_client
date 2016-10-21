@@ -5,3 +5,4 @@ authors = ["eyecreate"]
 
 [dependencies]
 getopts = "0.2.14"
+byteorder = "0.5.3"
