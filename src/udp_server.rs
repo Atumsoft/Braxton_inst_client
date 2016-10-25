@@ -1,8 +1,11 @@
+extern crate byteorder;
+
 use std::net::UdpSocket;
 use std::net::IpAddr;
 use std::io::Error;
 use std::string::String;
 use std::time;
+use self::byteorder::{ByteOrder,LittleEndian};
 
 
 fn int_to_char(byte_array: &[u8; 255]) -> String{
@@ -18,7 +21,7 @@ fn int_to_char(byte_array: &[u8; 255]) -> String{
 }
 
 fn byte_array_to_u32(byte_array: &[u8; 255]) -> u32 {
-    //TODO
+    LittleEndian::read_u32(byte_array)
 }
 
 #[allow(unused_variables)]
@@ -38,12 +41,17 @@ pub fn request_csv(send_to: String, date_range: String) -> Result<Vec<String>, E
     try!(socket.recv_from(&mut first_buf));
     file_size = byte_array_to_u32(&first_buf);
 
+    let mut recieved_bytes: u32 = 0;
     loop {
         let mut buf = [0; 255];
         let (amt, src) = try!(socket.recv_from(&mut buf));
 
+        recieved_bytes += amt as u32;
         let message = int_to_char(&buf);
         if &message == "STOP" {
+            break;
+        }
+        else if recieved_bytes >= file_size {
             break;
         }
         else{

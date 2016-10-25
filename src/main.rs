@@ -74,11 +74,3 @@ pub fn main() {
         return;
     }
 }
-
-// struct that holds info for the columns in the parsed file
-#[derive(Debug, Clone, RustcEncodable)]
-struct CsvRows {
-    pub date: String,
-    pub time: String,
-    pub info: HashMap<String, String>
-}
