@@ -24,7 +24,7 @@ class Controller:
 
         # setup params
         curWindowSize = self.mainWindow.GetSize()
-        self.mainWindow.SetMaxSize(curWindowSize)
+        # self.mainWindow.SetMaxSize(curWindowSize)
         self.mainWindow.SetMinSize(curWindowSize)
         icon = wx.EmptyIcon()
         icon.CopyFromBitmap(images.getLogoBitmap())
@@ -48,6 +48,7 @@ class Controller:
         command = "%s %s" % (RUST_APP_PATH, SCAN_ARGS)
         process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
         detectedInstruments, stderr = process.communicate()
+        if not detectedInstruments.strip(): return
 
         self.instDict = {}
         for instInfo in detectedInstruments.split(":"):
@@ -63,7 +64,7 @@ class Controller:
         filePicker = wx.FileDialog(self.mainWindow,
                                    "Select Save Location",
                                    os.getcwd(),
-                                   "output.csv",
+                                  "output.csv",
                                    "CSV files (*.csv)|*.csv|All files (*.*)|*.*",
                                    wx.FD_SAVE)
         if filePicker.ShowModal() == wx.ID_CANCEL: return
