@@ -25,7 +25,7 @@ fn byte_array_to_u32(byte_array: &[u8; 255]) -> u32 {
 }
 
 #[allow(unused_variables)]
-pub fn request_csv(send_to: String, date_range: String) -> Result<Vec<String>, Error> {
+pub fn request_csv(send_to: String, date_range: String) -> Result<Vec<u8>, Error> {
 
     let socket = try!(UdpSocket::bind("0.0.0.0:0"));
     try!(socket.set_broadcast(true));
@@ -34,10 +34,10 @@ pub fn request_csv(send_to: String, date_range: String) -> Result<Vec<String>, E
     try!(socket.send_to(b"SEND", socket_address));
     try!(socket.send_to(&date_range.as_bytes(), socket_address));
 
-    let mut data: Vec<String> = Vec::new();
+    let mut data: Vec<u8> = Vec::new();
 
     let mut first_buf = [0; 255];
-    let mut file_size: u32;
+    let file_size: u32;
     try!(socket.recv_from(&mut first_buf));
     file_size = byte_array_to_u32(&first_buf);
 
@@ -55,11 +55,11 @@ pub fn request_csv(send_to: String, date_range: String) -> Result<Vec<String>, E
             break;
         }
         else{
-            data.push(message)
+            data.extend_from_slice(&buf);
         }
     }
 
-    println!("Response");
+    println!("Got Response from instrument.");
 
     Ok(data)
 }   // the socket is closed here

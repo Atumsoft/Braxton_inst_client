@@ -4,6 +4,7 @@ use std::env;
 use std::path;
 use std::fs;
 use std::io;
+use std::io::Write;
 pub mod udp_server;
 
 fn print_args_usage(program_name: &str, options: Options) {
@@ -48,23 +49,22 @@ pub fn main() {
         let ip_addr = found_options.opt_str("c").unwrap();
 
         //Check if file exists. Don't overwrite existing file and instead exit.
-//        if path::Path::new(&output_file_path).exists() {
-//            println!("File already exists. Please specify another file.");
-//            std::process::exit(1);
-//        }
+        if path::Path::new(&output_file_path).exists() {
+            println!("File already exists. Please specify another file.");
+            std::process::exit(1);
+        }
 
         //Create file and open for writing.
-//        let output_file = open_file(output_file_path);
+        let output_file = open_file(output_file_path);
 
-        let date_range = format!("{}-{}", start_date, end_date);
-        let data = udp_server::request_csv(ip_addr, date_range).unwrap();
-
-        for row in &data{
-            println!("{}\n", row);
+        match output_file {
+            Ok(mut file) => {
+                let date_range = format!("{}-{}", start_date, end_date);
+                let data = udp_server::request_csv(ip_addr, date_range).unwrap();
+                file.write(data.as_slice());
+            },
+            Err(fail) => {},
         }
-        //TODO: send date filters to instrument
-        //TODO: read file data back from sockets
-        //TODO: write to file
 
         return;
     }
