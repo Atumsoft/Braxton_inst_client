@@ -51,6 +51,7 @@ pub fn request_csv(send_to: String, date_range: String) -> Result<Vec<u8>, Error
 
         recieved_bytes += amt as u32;
         let message = int_to_char(&buf);
+        println!("{}", message);
         if &message == "STOP" {
             break;
         }
