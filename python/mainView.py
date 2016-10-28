@@ -41,7 +41,7 @@ class MainFrame(wx.Frame):
         bSizer1 = wx.BoxSizer(wx.VERTICAL)
 
         self.m_panel1 = wx.Panel(self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize,
-                                 wx.DOUBLE_BORDER | wx.SIMPLE_BORDER | wx.TAB_TRAVERSAL)
+                                  wx.SIMPLE_BORDER | wx.TAB_TRAVERSAL)
         gSizer1 = wx.GridSizer(0, 2, 0, 0)
 
         self.m_staticText1 = wx.StaticText(self.m_panel1, wx.ID_ANY, u"Detected Instruments", wx.DefaultPosition,
