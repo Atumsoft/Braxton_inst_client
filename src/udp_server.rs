@@ -17,7 +17,10 @@ fn int_to_char(byte_array: &[u8; 255]) -> String{
         }
     }
 
-    String::from_utf8(new_vec).unwrap()
+    match String::from_utf8(new_vec) {
+        Ok(string) => string,
+        Err(_) => "".to_string(),
+    }
 }
 
 fn byte_array_to_u32(byte_array: &[u8; 255]) -> u32 {
@@ -51,11 +54,11 @@ pub fn request_csv(send_to: String, date_range: String) -> Result<Vec<u8>, Error
         if &message == "STOP" {
             break;
         }
-        else if recieved_bytes >= file_size {
-            break;
-        }
-        else{
+        else if recieved_bytes <= file_size {
             data.extend_from_slice(&buf);
+        }
+        if recieved_bytes >= file_size {
+            break;
         }
     }
 
