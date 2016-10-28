@@ -6,10 +6,7 @@ from mainController import Controller
 
 class MainSplash(wx.SplashScreen):
     def __init__(self, app=None, parent=None):
-        logo = images.getLogoBitmap()
-        image = wx.ImageFromBitmap(logo)
-        image = image.Scale(64, 64, wx.IMAGE_QUALITY_HIGH)
-        logo = wx.BitmapFromImage(image)
+        logo = images.getAtumate_logo_socialBitmap()
         self.app=app
 
         splashStyle = wx.SPLASH_CENTRE_ON_SCREEN | wx.SPLASH_TIMEOUT
