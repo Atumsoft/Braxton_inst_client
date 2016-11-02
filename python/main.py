@@ -1,10 +1,10 @@
 import wx
 
 
-from mainSplash import MainSplash
+from mainController import Controller
 
 
 if __name__ == '__main__':
     app = wx.App()
-    controller = MainSplash(app=app)
+    controller = Controller()
     app.MainLoop()
