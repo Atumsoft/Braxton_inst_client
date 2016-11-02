@@ -7,7 +7,7 @@ import csv
 from mainView import MainFrame
 import images
 
-RUST_APP_PATH = "./atumate-instrument-brew-gui"
+RUST_APP_PATH = "atumate-instrument-brew-gui.exe"
 SCAN_ARGS = "-f"
 CONNECT_ARGS = "-c %s -o %s -s %s -e %s"  # -c: ip address of instrument -o: output file -s: starting date -e: ending date
 
