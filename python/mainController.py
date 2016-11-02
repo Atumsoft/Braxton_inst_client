@@ -24,9 +24,11 @@ class Controller:
 
     def __init__(self):
         self.mainWindow = MainFrame(None)
-        logo = images.getAtumate_logo_socialBitmap()
-        self.splashscreen = splash.AdvancedSplash(self.mainWindow, bitmap=logo, agwStyle=splash.AS_CENTER_ON_SCREEN)
+        logo = images.getatumate_logo_tall_blue_mixcase_biggerBitmap()
+        # logo = images.getAtumate_logo_socialBitmap()
+        self.splashscreen = splash.AdvancedSplash(self.mainWindow, bitmap=logo, agwStyle=splash.AS_CENTER_ON_SCREEN)# | splash.AS_SHADOW_BITMAP, shadowcolour=wx.BLACK)
         self.splashscreen.Hide()
+        self.splashscreen.SetSplashShape()
         self.splashscreen.Bind(wx.EVT_MOUSE_EVENTS, self.onSplashMouse)
         self.splashscreen.SetText("Scanning network, please wait...")
         self.splashscreen.SetTextColour(wx.WHITE)
