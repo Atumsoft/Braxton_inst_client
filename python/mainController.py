@@ -24,15 +24,14 @@ class Controller:
 
     def __init__(self):
         self.mainWindow = MainFrame(None)
-        logo = images.getatumate_logo_tall_blue_mixcase_biggerBitmap()
-        # logo = images.getAtumate_logo_socialBitmap()
-        self.splashscreen = splash.AdvancedSplash(self.mainWindow, bitmap=logo, agwStyle=splash.AS_CENTER_ON_SCREEN)# | splash.AS_SHADOW_BITMAP, shadowcolour=wx.BLACK)
+        logo = images.getAtumate_logo_socialBitmap()
+        self.splashscreen = splash.AdvancedSplash(self.mainWindow, bitmap=logo, agwStyle=splash.AS_CENTER_ON_SCREEN | splash.AS_SHADOW_BITMAP, shadowcolour=wx.BLACK)
         self.splashscreen.Hide()
-        self.splashscreen.SetSplashShape()
         self.splashscreen.Bind(wx.EVT_MOUSE_EVENTS, self.onSplashMouse)
         self.splashscreen.SetText("Scanning network, please wait...")
         self.splashscreen.SetTextColour(wx.WHITE)
         self.splashscreen.SetTextPosition(((logo.GetWidth()/2)-len(self.splashscreen.GetText())*3.7, logo.GetHeight()-28))
+        self.splashscreen.SetSplashShape()
         self.splashscreen.Show()
         self.splashscreen.SetFocus()
         self.splashscreenShown = True
@@ -115,34 +114,6 @@ class Controller:
         command = "%s %s" % (RUST_APP_PATH, CONNECT_ARGS % (selectedInstIp.strip(), outFile, startDate, endDate))
         process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
         data, stderr = process.communicate()
-        # if "file already exists" in data.lower():
-        #     msgBox = wx.MessageDialog(self.mainWindow, data, "File Error", wx.ICON_ERROR)
-        #     msgBox.ShowModal()
-        #     return
-
-        # dataList = []
-        # for row in data.split("\n"):
-        #     if row == "Response": continue
-        #     if not row: continue
-        #     print row
-        #     dataList.append(eval(row))
-
-        # # write to csv file
-        # with open(outFile, "wb+") as csvFile:
-        #     csvWriter = csv.writer(csvFile, delimiter=",")
-        #
-        #     headers = ["date", "time"] + dataList[0]["info"].keys()
-        #     csvWriter.writerow(headers)
-        #     for row in dataList:
-        #         csvWriter.writerow([row["date"], row["time"]] + row["info"].values())
-        #
-        # selectedInst = self.mainWindow.cmbInstruments.GetValue()
-        # if not selectedInst:
-        #     msgBox = wx.MessageDialog(self.mainWindow, "Please make an instrument selection", "Selection Error", wx.ICON_ERROR)
-        #     msgBox.ShowModal()
-        #
-        # subprocess.Popen(outFile, shell=True)
-
 
     def _wxdate2pydate(self, date):
         assert isinstance(date, wx.DateTime)
