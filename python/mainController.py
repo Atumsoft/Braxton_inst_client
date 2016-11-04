@@ -25,13 +25,12 @@ class Controller:
     def __init__(self):
         self.mainWindow = MainFrame(None)
         logo = images.getAtumate_logo_socialBitmap()
-        self.splashscreen = splash.AdvancedSplash(self.mainWindow, bitmap=logo, agwStyle=splash.AS_CENTER_ON_SCREEN | splash.AS_SHADOW_BITMAP, shadowcolour=wx.BLACK)
+        self.splashscreen = splash.AdvancedSplash(self.mainWindow, bitmap=logo, agwStyle=splash.AS_CENTER_ON_SCREEN)  # Try this later: | splash.AS_SHADOW_BITMAP, shadowcolour=wx.BLACK)
         self.splashscreen.Hide()
         self.splashscreen.Bind(wx.EVT_MOUSE_EVENTS, self.onSplashMouse)
         self.splashscreen.SetText("Scanning network, please wait...")
         self.splashscreen.SetTextColour(wx.WHITE)
         self.splashscreen.SetTextPosition(((logo.GetWidth()/2)-len(self.splashscreen.GetText())*3.7, logo.GetHeight()-28))
-        self.splashscreen.SetSplashShape()
         self.splashscreen.Show()
         self.splashscreen.SetFocus()
         self.splashscreenShown = True
